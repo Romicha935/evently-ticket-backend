@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
   async register(registerDto: RegisterDto) {
-    const { name, email, password } = registerDto;
+    const { firstName, lastName, email, password } = registerDto;
 
     // Check existing user
     const existingUser = await this.prisma.user.findUnique({
@@ -24,13 +24,14 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const user = await this.prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
-    });
+  const user = await this.prisma.user.create({
+  data: {
+    firstName,
+    lastName,
+    email,
+    password: hashedPassword,
+  },
+});
 
     // Never return password
     const { password: _, ...userWithoutPassword } = user;
