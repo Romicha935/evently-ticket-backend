@@ -1,5 +1,12 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -25,9 +32,10 @@ export class AuthController {
   }
 
   @Get('profile')
-@UseGuards(JwtAuthGuard)
-@ApiOperation({ summary: 'Get current user profile' })
-getProfile(@Req() req: any) {
-  return req.user;
-}
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get current user profile' })
+  getProfile(@Req() req: any) {
+    return req.user;
+  }
 }
