@@ -1,18 +1,88 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { BookingsService } from './bookings.service';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
-describe('BookingsService', () => {
-  let service: BookingsService;
+import { PrismaService } from '../../prisma/prisma.service';
+import { CreateBookingDto } from './dto/create-booking.dto';
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [BookingsService],
-    }).compile();
+@Injectable()
+export class BookingsService {
+  constructor(private readonly prisma: PrismaService) {}
 
-    service = module.get<BookingsService>(BookingsService);
-  });
+  async create(userId: number, createBookingDto: CreateBookingDto) {
+    const { eventId, seatNumbers } = createBookingDto;
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
+    // 1. Check event
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    // 2. Check seat list
+    if (!seatNumbers || seatNumbers.length === 0) {
+      throw new BadRequestException('At least one seat is required');
+    }
+
+    // 3. Remove duplicate seats
+    const uniqueSeats = [...new Set(seatNumbers)];
+
+    if (uniqueSeats.length !== seatNumbers.length) {
+      throw new BadRequestException('Duplicate seats are not allowed');
+    }
+
+    // 4. Check already booked seats
+    const bookedSeats = await this.prisma.bookingSeat.findMany({
+      where: {
+        booking: {
+          eventId,
+        },
+        seatNumber: {
+          in: uniqueSeats,
+        },
+      },
+      select: {
+        seatNumber: true,
+      },
+    });
+
+    if (bookedSeats.length > 0) {
+      const seats = bookedSeats.map((seat) => seat.seatNumber);
+
+      throw new BadRequestException(
+        `These seats are already booked: ${seats.join(', ')}`,
+      );
+    }
+
+    // 5. Calculate total
+    const totalAmount = event.price * uniqueSeats.length;
+
+    // 6. Create booking + seats
+    const booking = await this.prisma.booking.create({
+      data: {
+        userId,
+        eventId,
+        totalAmount,
+        status: 'PENDING',
+        seats: {
+          create: uniqueSeats.map((seatNumber) => ({
+            seatNumber,
+          })),
+        },
+      },
+      include: {
+        event: true,
+        seats: true,
+      },
+    });
+
+    return {
+      message: 'Booking created successfully',
+      booking,
+    };
+  }
+}
