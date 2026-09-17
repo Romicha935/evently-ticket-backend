@@ -49,3 +49,13 @@ export type User = Prisma.UserModel
  * 
  */
 export type Event = Prisma.EventModel
+/**
+ * Model Booking
+ * 
+ */
+export type Booking = Prisma.BookingModel
+/**
+ * Model BookingSeat
+ * 
+ */
+export type BookingSeat = Prisma.BookingSeatModel
