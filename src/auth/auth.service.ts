@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -79,5 +80,28 @@ export class AuthService {
       accessToken,
       user: userWithoutPassword,
     };
+  }
+  async makeAdmin(email: string) {
+  const user = await this.prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  return this.prisma.user.update({
+    where: { email },
+    data: {
+      role: 'ADMIN',
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      role: true,
+      },
+    });
   }
 }

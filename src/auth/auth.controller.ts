@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+
 
 import {
   ApiBearerAuth,
@@ -11,6 +12,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt_auth.guards';
+import { MakeAdminDto } from './dto/make-admin.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -30,6 +32,11 @@ export class AuthController {
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
+@Post('make-admin')
+@ApiOperation({ summary: 'Promote a user to admin' })
+makeAdmin(@Body() makeAdminDto: MakeAdminDto) {
+  return this.authService.makeAdmin(makeAdminDto.email);
+}
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
