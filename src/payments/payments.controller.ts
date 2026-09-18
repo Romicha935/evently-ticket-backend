@@ -1,6 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
+  ParseIntPipe,
   Post,
   Req,
   UseGuards,
@@ -19,23 +22,47 @@ import { JwtAuthGuard } from '../auth/guards/jwt_auth.guards';
 @ApiTags('Payments')
 @ApiBearerAuth()
 @Controller('payments')
+@UseGuards(JwtAuthGuard)
 export class PaymentsController {
   constructor(
     private readonly paymentsService: PaymentsService,
   ) {}
 
-  @Post('checkout')
-  @UseGuards(JwtAuthGuard)
+  @Post()
   @ApiOperation({
-    summary: 'Create Stripe checkout session',
+    summary: 'Create payment for my booking',
   })
-  createCheckout(
+  create(
     @Req() req: any,
     @Body() createPaymentDto: CreatePaymentDto,
   ) {
-    return this.paymentsService.createCheckoutSession(
+    return this.paymentsService.create(
       req.user.userId,
       createPaymentDto,
+    );
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: 'Get my payments',
+  })
+  findAll(@Req() req: any) {
+    return this.paymentsService.findAll(
+      req.user.userId,
+    );
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get my payment by ID',
+  })
+  findOne(
+    @Req() req: any,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.paymentsService.findOne(
+      id,
+      req.user.userId,
     );
   }
 }

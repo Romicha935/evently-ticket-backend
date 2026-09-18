@@ -3,29 +3,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import Stripe from 'stripe';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 
 @Injectable()
 export class PaymentsService {
-  private readonly stripe: Stripe;
+  constructor(private readonly prisma: PrismaService) {}
 
-  constructor(private readonly prisma: PrismaService) {
-    const secretKey = process.env.STRIPE_SECRET_KEY;
-
-    if (!secretKey) {
-      throw new Error('STRIPE_SECRET_KEY is not configured');
-    }
-
-    this.stripe = new Stripe(secretKey);
-  }
-
-  async createCheckoutSession(
-    userId: number,
-    createPaymentDto: CreatePaymentDto,
-  ) {
+  async create(userId: number, createPaymentDto: CreatePaymentDto) {
     const { bookingId } = createPaymentDto;
 
     const booking = await this.prisma.booking.findFirst({
@@ -33,12 +19,11 @@ export class PaymentsService {
         id: bookingId,
         userId,
       },
-    include: {
-  event: true,
-  seats: true,
-  payment: true,
-  user: true,
-},
+      include: {
+        event: true,
+        seats: true,
+        payment: true,
+      },
     });
 
     if (!booking) {
@@ -57,53 +42,64 @@ export class PaymentsService {
       );
     }
 
-    const session = await this.stripe.checkout.sessions.create({
-      mode: 'payment',
-
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: booking.event.title,
-              description: `Seats: ${booking.seats
-                .map((seat) => seat.seatNumber)
-                .join(', ')}`,
-            },
-            unit_amount: Math.round(booking.totalAmount * 100),
-          },
-          quantity: 1,
-        },
-      ],
-
-      metadata: {
-        bookingId: booking.id.toString(),
-        userId: userId.toString(),
-      },
-
-      success_url:
-        'http://localhost:3000/payment/success?session_id={CHECKOUT_SESSION_ID}',
-
-      cancel_url:
-        'http://localhost:3000/payment/cancel',
-
-      customer_email: booking.user?.email,
-    });
-
-    await this.prisma.payment.create({
+    const payment = await this.prisma.payment.create({
       data: {
         bookingId: booking.id,
         amount: booking.totalAmount,
-        currency: 'usd',
+        currency: 'BDT',
         status: 'PENDING',
-        stripeSessionId: session.id,
       },
     });
 
     return {
-      message: 'Checkout session created',
-      checkoutUrl: session.url,
-      sessionId: session.id,
+      message: 'Payment created successfully',
+      payment,
     };
+  }
+
+  async findAll(userId: number) {
+    return this.prisma.payment.findMany({
+      where: {
+        booking: {
+          userId,
+        },
+      },
+      include: {
+        booking: {
+          include: {
+            event: true,
+            seats: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async findOne(id: number, userId: number) {
+    const payment = await this.prisma.payment.findFirst({
+      where: {
+        id,
+        booking: {
+          userId,
+        },
+      },
+      include: {
+        booking: {
+          include: {
+            event: true,
+            seats: true,
+          },
+        },
+      },
+    });
+
+    if (!payment) {
+      throw new NotFoundException('Payment not found');
+    }
+
+    return payment;
   }
 }
