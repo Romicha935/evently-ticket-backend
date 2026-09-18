@@ -48,6 +48,7 @@ model Booking {
   user        User          @relation(fields: [userId], references: [id])
   event       Event         @relation(fields: [eventId], references: [id])
   seats       BookingSeat[]
+  payment Payment?
 }
 
 model BookingSeat {
@@ -58,4 +59,17 @@ model BookingSeat {
   booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   @@unique([bookingId, seatNumber])
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  bookingId     Int      @unique
+  amount        Float
+  currency      String   @default("usd")
+  status        String   @default("PENDING")
+  stripeSessionId String? @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  booking       Booking  @relation(fields: [bookingId], references: [id])
 }

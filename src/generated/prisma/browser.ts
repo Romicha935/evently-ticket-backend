@@ -37,3 +37,8 @@ export type Booking = Prisma.BookingModel
  * 
  */
 export type BookingSeat = Prisma.BookingSeatModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
