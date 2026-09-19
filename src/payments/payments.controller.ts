@@ -65,7 +65,7 @@ export class PaymentsController {
       req.user.userId,
     );
   }
-  @Post(':id/mark-paid')
+@Post(':id/mark-paid')
 @ApiOperation({
   summary: 'Mark payment as paid (development only)',
 })
