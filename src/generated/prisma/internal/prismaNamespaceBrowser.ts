@@ -55,7 +55,8 @@ export const ModelName = {
   Event: 'Event',
   Booking: 'Booking',
   BookingSeat: 'BookingSeat',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  Ticket: 'Ticket'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -138,6 +139,18 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const TicketScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  ticketCode: 'ticketCode',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
 
 
 export const SortOrder = {

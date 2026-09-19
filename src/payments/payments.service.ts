@@ -102,7 +102,7 @@ export class PaymentsService {
 
     return payment;
   }
-  
+
   async markAsPaid(id: number, userId: number) {
   const payment = await this.prisma.payment.findFirst({
     where: {

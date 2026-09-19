@@ -248,6 +248,7 @@ export type BookingWhereInput = {
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   seats?: Prisma.BookingSeatListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  ticket?: Prisma.XOR<Prisma.TicketNullableScalarRelationFilter, Prisma.TicketWhereInput> | null
 }
 
 export type BookingOrderByWithRelationInput = {
@@ -262,6 +263,7 @@ export type BookingOrderByWithRelationInput = {
   event?: Prisma.EventOrderByWithRelationInput
   seats?: Prisma.BookingSeatOrderByRelationAggregateInput
   payment?: Prisma.PaymentOrderByWithRelationInput
+  ticket?: Prisma.TicketOrderByWithRelationInput
 }
 
 export type BookingWhereUniqueInput = Prisma.AtLeast<{
@@ -279,6 +281,7 @@ export type BookingWhereUniqueInput = Prisma.AtLeast<{
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   seats?: Prisma.BookingSeatListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  ticket?: Prisma.XOR<Prisma.TicketNullableScalarRelationFilter, Prisma.TicketWhereInput> | null
 }, "id">
 
 export type BookingOrderByWithAggregationInput = {
@@ -318,6 +321,7 @@ export type BookingCreateInput = {
   event: Prisma.EventCreateNestedOneWithoutBookingsInput
   seats?: Prisma.BookingSeatCreateNestedManyWithoutBookingInput
   payment?: Prisma.PaymentCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketCreateNestedOneWithoutBookingInput
 }
 
 export type BookingUncheckedCreateInput = {
@@ -330,6 +334,7 @@ export type BookingUncheckedCreateInput = {
   updatedAt?: Date | string
   seats?: Prisma.BookingSeatUncheckedCreateNestedManyWithoutBookingInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketUncheckedCreateNestedOneWithoutBookingInput
 }
 
 export type BookingUpdateInput = {
@@ -341,6 +346,7 @@ export type BookingUpdateInput = {
   event?: Prisma.EventUpdateOneRequiredWithoutBookingsNestedInput
   seats?: Prisma.BookingSeatUpdateManyWithoutBookingNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateInput = {
@@ -353,6 +359,7 @@ export type BookingUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seats?: Prisma.BookingSeatUncheckedUpdateManyWithoutBookingNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUncheckedUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingCreateManyInput = {
@@ -553,6 +560,20 @@ export type BookingUpdateOneRequiredWithoutPaymentNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BookingUpdateToOneWithWhereWithoutPaymentInput, Prisma.BookingUpdateWithoutPaymentInput>, Prisma.BookingUncheckedUpdateWithoutPaymentInput>
 }
 
+export type BookingCreateNestedOneWithoutTicketInput = {
+  create?: Prisma.XOR<Prisma.BookingCreateWithoutTicketInput, Prisma.BookingUncheckedCreateWithoutTicketInput>
+  connectOrCreate?: Prisma.BookingCreateOrConnectWithoutTicketInput
+  connect?: Prisma.BookingWhereUniqueInput
+}
+
+export type BookingUpdateOneRequiredWithoutTicketNestedInput = {
+  create?: Prisma.XOR<Prisma.BookingCreateWithoutTicketInput, Prisma.BookingUncheckedCreateWithoutTicketInput>
+  connectOrCreate?: Prisma.BookingCreateOrConnectWithoutTicketInput
+  upsert?: Prisma.BookingUpsertWithoutTicketInput
+  connect?: Prisma.BookingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BookingUpdateToOneWithWhereWithoutTicketInput, Prisma.BookingUpdateWithoutTicketInput>, Prisma.BookingUncheckedUpdateWithoutTicketInput>
+}
+
 export type BookingCreateWithoutUserInput = {
   totalAmount: number
   status?: string
@@ -561,6 +582,7 @@ export type BookingCreateWithoutUserInput = {
   event: Prisma.EventCreateNestedOneWithoutBookingsInput
   seats?: Prisma.BookingSeatCreateNestedManyWithoutBookingInput
   payment?: Prisma.PaymentCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketCreateNestedOneWithoutBookingInput
 }
 
 export type BookingUncheckedCreateWithoutUserInput = {
@@ -572,6 +594,7 @@ export type BookingUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   seats?: Prisma.BookingSeatUncheckedCreateNestedManyWithoutBookingInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketUncheckedCreateNestedOneWithoutBookingInput
 }
 
 export type BookingCreateOrConnectWithoutUserInput = {
@@ -621,6 +644,7 @@ export type BookingCreateWithoutEventInput = {
   user: Prisma.UserCreateNestedOneWithoutBookingsInput
   seats?: Prisma.BookingSeatCreateNestedManyWithoutBookingInput
   payment?: Prisma.PaymentCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketCreateNestedOneWithoutBookingInput
 }
 
 export type BookingUncheckedCreateWithoutEventInput = {
@@ -632,6 +656,7 @@ export type BookingUncheckedCreateWithoutEventInput = {
   updatedAt?: Date | string
   seats?: Prisma.BookingSeatUncheckedCreateNestedManyWithoutBookingInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketUncheckedCreateNestedOneWithoutBookingInput
 }
 
 export type BookingCreateOrConnectWithoutEventInput = {
@@ -668,6 +693,7 @@ export type BookingCreateWithoutSeatsInput = {
   user: Prisma.UserCreateNestedOneWithoutBookingsInput
   event: Prisma.EventCreateNestedOneWithoutBookingsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketCreateNestedOneWithoutBookingInput
 }
 
 export type BookingUncheckedCreateWithoutSeatsInput = {
@@ -679,6 +705,7 @@ export type BookingUncheckedCreateWithoutSeatsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutBookingInput
+  ticket?: Prisma.TicketUncheckedCreateNestedOneWithoutBookingInput
 }
 
 export type BookingCreateOrConnectWithoutSeatsInput = {
@@ -705,6 +732,7 @@ export type BookingUpdateWithoutSeatsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutBookingsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateWithoutSeatsInput = {
@@ -716,6 +744,7 @@ export type BookingUncheckedUpdateWithoutSeatsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUncheckedUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingCreateWithoutPaymentInput = {
@@ -726,6 +755,7 @@ export type BookingCreateWithoutPaymentInput = {
   user: Prisma.UserCreateNestedOneWithoutBookingsInput
   event: Prisma.EventCreateNestedOneWithoutBookingsInput
   seats?: Prisma.BookingSeatCreateNestedManyWithoutBookingInput
+  ticket?: Prisma.TicketCreateNestedOneWithoutBookingInput
 }
 
 export type BookingUncheckedCreateWithoutPaymentInput = {
@@ -737,6 +767,7 @@ export type BookingUncheckedCreateWithoutPaymentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   seats?: Prisma.BookingSeatUncheckedCreateNestedManyWithoutBookingInput
+  ticket?: Prisma.TicketUncheckedCreateNestedOneWithoutBookingInput
 }
 
 export type BookingCreateOrConnectWithoutPaymentInput = {
@@ -763,6 +794,7 @@ export type BookingUpdateWithoutPaymentInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutBookingsNestedInput
   seats?: Prisma.BookingSeatUpdateManyWithoutBookingNestedInput
+  ticket?: Prisma.TicketUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateWithoutPaymentInput = {
@@ -774,6 +806,69 @@ export type BookingUncheckedUpdateWithoutPaymentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seats?: Prisma.BookingSeatUncheckedUpdateManyWithoutBookingNestedInput
+  ticket?: Prisma.TicketUncheckedUpdateOneWithoutBookingNestedInput
+}
+
+export type BookingCreateWithoutTicketInput = {
+  totalAmount: number
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutBookingsInput
+  event: Prisma.EventCreateNestedOneWithoutBookingsInput
+  seats?: Prisma.BookingSeatCreateNestedManyWithoutBookingInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutBookingInput
+}
+
+export type BookingUncheckedCreateWithoutTicketInput = {
+  id?: number
+  userId: number
+  eventId: number
+  totalAmount: number
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  seats?: Prisma.BookingSeatUncheckedCreateNestedManyWithoutBookingInput
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutBookingInput
+}
+
+export type BookingCreateOrConnectWithoutTicketInput = {
+  where: Prisma.BookingWhereUniqueInput
+  create: Prisma.XOR<Prisma.BookingCreateWithoutTicketInput, Prisma.BookingUncheckedCreateWithoutTicketInput>
+}
+
+export type BookingUpsertWithoutTicketInput = {
+  update: Prisma.XOR<Prisma.BookingUpdateWithoutTicketInput, Prisma.BookingUncheckedUpdateWithoutTicketInput>
+  create: Prisma.XOR<Prisma.BookingCreateWithoutTicketInput, Prisma.BookingUncheckedCreateWithoutTicketInput>
+  where?: Prisma.BookingWhereInput
+}
+
+export type BookingUpdateToOneWithWhereWithoutTicketInput = {
+  where?: Prisma.BookingWhereInput
+  data: Prisma.XOR<Prisma.BookingUpdateWithoutTicketInput, Prisma.BookingUncheckedUpdateWithoutTicketInput>
+}
+
+export type BookingUpdateWithoutTicketInput = {
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
+  event?: Prisma.EventUpdateOneRequiredWithoutBookingsNestedInput
+  seats?: Prisma.BookingSeatUpdateManyWithoutBookingNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutBookingNestedInput
+}
+
+export type BookingUncheckedUpdateWithoutTicketInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  eventId?: Prisma.IntFieldUpdateOperationsInput | number
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  seats?: Prisma.BookingSeatUncheckedUpdateManyWithoutBookingNestedInput
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingCreateManyUserInput = {
@@ -793,6 +888,7 @@ export type BookingUpdateWithoutUserInput = {
   event?: Prisma.EventUpdateOneRequiredWithoutBookingsNestedInput
   seats?: Prisma.BookingSeatUpdateManyWithoutBookingNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateWithoutUserInput = {
@@ -804,6 +900,7 @@ export type BookingUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seats?: Prisma.BookingSeatUncheckedUpdateManyWithoutBookingNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUncheckedUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateManyWithoutUserInput = {
@@ -832,6 +929,7 @@ export type BookingUpdateWithoutEventInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   seats?: Prisma.BookingSeatUpdateManyWithoutBookingNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateWithoutEventInput = {
@@ -843,6 +941,7 @@ export type BookingUncheckedUpdateWithoutEventInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seats?: Prisma.BookingSeatUncheckedUpdateManyWithoutBookingNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutBookingNestedInput
+  ticket?: Prisma.TicketUncheckedUpdateOneWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateManyWithoutEventInput = {
@@ -897,6 +996,7 @@ export type BookingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   seats?: boolean | Prisma.Booking$seatsArgs<ExtArgs>
   payment?: boolean | Prisma.Booking$paymentArgs<ExtArgs>
+  ticket?: boolean | Prisma.Booking$ticketArgs<ExtArgs>
   _count?: boolean | Prisma.BookingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking"]>
 
@@ -940,6 +1040,7 @@ export type BookingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   seats?: boolean | Prisma.Booking$seatsArgs<ExtArgs>
   payment?: boolean | Prisma.Booking$paymentArgs<ExtArgs>
+  ticket?: boolean | Prisma.Booking$ticketArgs<ExtArgs>
   _count?: boolean | Prisma.BookingCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BookingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -958,6 +1059,7 @@ export type $BookingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     event: Prisma.$EventPayload<ExtArgs>
     seats: Prisma.$BookingSeatPayload<ExtArgs>[]
     payment: Prisma.$PaymentPayload<ExtArgs> | null
+    ticket: Prisma.$TicketPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1365,6 +1467,7 @@ export interface Prisma__BookingClient<T, Null = never, ExtArgs extends runtime.
   event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   seats<T extends Prisma.Booking$seatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Booking$seatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingSeatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payment<T extends Prisma.Booking$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Booking$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ticket<T extends Prisma.Booking$ticketArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Booking$ticketArgs<ExtArgs>>): Prisma.Prisma__TicketClient<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1842,6 +1945,25 @@ export type Booking$paymentArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.PaymentInclude<ExtArgs> | null
   where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * Booking.ticket
+ */
+export type Booking$ticketArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Ticket
+   */
+  select?: Prisma.TicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Ticket
+   */
+  omit?: Prisma.TicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketInclude<ExtArgs> | null
+  where?: Prisma.TicketWhereInput
 }
 
 /**
