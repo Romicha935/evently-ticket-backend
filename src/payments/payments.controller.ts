@@ -65,4 +65,17 @@ export class PaymentsController {
       req.user.userId,
     );
   }
+  @Post(':id/mark-paid')
+@ApiOperation({
+  summary: 'Mark payment as paid (development only)',
+})
+markAsPaid(
+  @Req() req: any,
+  @Param('id', ParseIntPipe) id: number,
+) {
+  return this.paymentsService.markAsPaid(
+    id,
+    req.user.userId,
+  );
+}
 }

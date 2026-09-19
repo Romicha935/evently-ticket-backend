@@ -102,4 +102,59 @@ export class PaymentsService {
 
     return payment;
   }
+  
+  async markAsPaid(id: number, userId: number) {
+  const payment = await this.prisma.payment.findFirst({
+    where: {
+      id,
+      booking: {
+        userId,
+      },
+    },
+    include: {
+      booking: true,
+    },
+  });
+
+  if (!payment) {
+    throw new NotFoundException('Payment not found');
+  }
+
+  if (payment.status === 'PAID') {
+    throw new BadRequestException(
+      'Payment is already marked as paid',
+    );
+  }
+
+  const result = await this.prisma.$transaction(async (tx) => {
+    const updatedPayment = await tx.payment.update({
+      where: {
+        id: payment.id,
+      },
+      data: {
+        status: 'PAID',
+      },
+    });
+
+    const updatedBooking = await tx.booking.update({
+      where: {
+        id: payment.bookingId,
+      },
+      data: {
+        status: 'CONFIRMED',
+      },
+    });
+
+    return {
+      updatedPayment,
+      updatedBooking,
+    };
+  });
+
+  return {
+    message: 'Payment marked as paid',
+    payment: result.updatedPayment,
+    booking: result.updatedBooking,
+  };
+}
 }
