@@ -47,3 +47,8 @@ export type Payment = Prisma.PaymentModel
  * 
  */
 export type Ticket = Prisma.TicketModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
