@@ -1,26 +1,89 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
 
 @Injectable()
 export class NotificationsService {
-  create(createNotificationDto: CreateNotificationDto) {
-    return 'This action adds a new notification';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createNotificationDto: CreateNotificationDto) {
+    const {
+      userId,
+      title,
+      message,
+      type,
+    } = createNotificationDto;
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.prisma.notification.create({
+      data: {
+        userId,
+        title,
+        message,
+        type,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all notifications`;
+  async findAll(userId: number) {
+    return this.prisma.notification.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} notification`;
+  async markAsRead(id: number, userId: number) {
+    const notification = await this.prisma.notification.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    if (!notification) {
+      throw new NotFoundException('Notification not found');
+    }
+
+    return this.prisma.notification.update({
+      where: {
+        id,
+      },
+      data: {
+        isRead: true,
+      },
+    });
   }
 
-  update(id: number, updateNotificationDto: UpdateNotificationDto) {
-    return `This action updates a #${id} notification`;
-  }
+  async markAllAsRead(userId: number) {
+    await this.prisma.notification.updateMany({
+      where: {
+        userId,
+        isRead: false,
+      },
+      data: {
+        isRead: true,
+      },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} notification`;
+    return {
+      message: 'All notifications marked as read',
+    };
   }
 }

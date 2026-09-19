@@ -1,34 +1,77 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt_auth.guards';
 
+@ApiTags('Notifications')
+@ApiBearerAuth()
 @Controller('notifications')
+@UseGuards(JwtAuthGuard)
 export class NotificationsController {
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   @Post()
-  create(@Body() createNotificationDto: CreateNotificationDto) {
-    return this.notificationsService.create(createNotificationDto);
+  @ApiOperation({
+    summary: 'Create a notification',
+  })
+  create(
+    @Body() createNotificationDto: CreateNotificationDto,
+  ) {
+    return this.notificationsService.create(
+      createNotificationDto,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.notificationsService.findAll();
+  @ApiOperation({
+    summary: 'Get my notifications',
+  })
+  findAll(@Req() req: any) {
+    return this.notificationsService.findAll(
+      req.user.userId,
+    );
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.notificationsService.findOne(+id);
+  @Patch(':id/read')
+  @ApiOperation({
+    summary: 'Mark notification as read',
+  })
+  markAsRead(
+    @Req() req: any,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.notificationsService.markAsRead(
+      id,
+      req.user.userId,
+    );
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNotificationDto: UpdateNotificationDto) {
-    return this.notificationsService.update(+id, updateNotificationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notificationsService.remove(+id);
+  @Patch('read-all')
+  @ApiOperation({
+    summary: 'Mark all notifications as read',
+  })
+  markAllAsRead(@Req() req: any) {
+    return this.notificationsService.markAllAsRead(
+      req.user.userId,
+    );
   }
 }
