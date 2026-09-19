@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-
+import * as crypto from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 
@@ -103,7 +103,7 @@ export class PaymentsService {
     return payment;
   }
 
-  async markAsPaid(id: number, userId: number) {
+async markAsPaid(id: number, userId: number) {
   const payment = await this.prisma.payment.findFirst({
     where: {
       id,
@@ -112,7 +112,12 @@ export class PaymentsService {
       },
     },
     include: {
-      booking: true,
+      booking: {
+        include: {
+          event: true,
+          seats: true,
+        },
+      },
     },
   });
 
@@ -145,16 +150,40 @@ export class PaymentsService {
       },
     });
 
+    const ticket = await tx.ticket.create({
+      data: {
+        bookingId: payment.bookingId,
+        ticketCode: `EVT-${crypto.randomUUID()
+          .replace(/-/g, '')
+          .slice(0, 12)
+          .toUpperCase()}`,
+        status: 'ACTIVE',
+      },
+    });
+
+    const notification = await tx.notification.create({
+      data: {
+        userId,
+        title: 'Booking Confirmed',
+        message: `Your booking for ${payment.booking.event.title} has been confirmed.`,
+        type: 'BOOKING_CONFIRMED',
+      },
+    });
+
     return {
       updatedPayment,
       updatedBooking,
+      ticket,
+      notification,
     };
   });
 
   return {
-    message: 'Payment marked as paid',
+    message: 'Payment completed successfully',
     payment: result.updatedPayment,
     booking: result.updatedBooking,
+    ticket: result.ticket,
+    notification: result.notification,
   };
 }
 }
