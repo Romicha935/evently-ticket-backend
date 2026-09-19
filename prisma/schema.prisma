@@ -49,6 +49,7 @@ model Booking {
   event       Event         @relation(fields: [eventId], references: [id])
   seats       BookingSeat[]
   payment Payment?
+  ticket Ticket?
 }
 
 model BookingSeat {
@@ -72,4 +73,14 @@ model Payment {
   updatedAt     DateTime @updatedAt
 
   booking       Booking  @relation(fields: [bookingId], references: [id])
+}
+model Ticket {
+  id        Int      @id @default(autoincrement())
+  bookingId Int      @unique
+  ticketCode String  @unique
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  booking   Booking  @relation(fields: [bookingId], references: [id])
 }
