@@ -36,19 +36,22 @@ export class BookingsService {
     }
 
     // 4. Check already booked seats
-    const bookedSeats = await this.prisma.bookingSeat.findMany({
-      where: {
-        booking: {
-          eventId,
-        },
-        seatNumber: {
-          in: uniqueSeats,
-        },
+  const bookedSeats = await this.prisma.bookingSeat.findMany({
+  where: {
+    booking: {
+      eventId,
+      status: {
+        in: ['PENDING', 'CONFIRMED'],
       },
-      select: {
-        seatNumber: true,
-      },
-    });
+    },
+    seatNumber: {
+      in: uniqueSeats,
+    },
+  },
+  select: {
+    seatNumber: true,
+  },
+});
 
     if (bookedSeats.length > 0) {
       const seats = bookedSeats.map((seat) => seat.seatNumber);
