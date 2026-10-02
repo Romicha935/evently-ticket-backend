@@ -18,6 +18,8 @@ import {
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt_auth.guards';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('Payments')
 @ApiBearerAuth()
@@ -78,4 +80,25 @@ markAsPaid(
     req.user.userId,
   );
 }
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Get all payments (Admin only)',
+  })
+  adminFindAll() {
+    return this.paymentsService.adminFindAll();
+  }
+
+  @Get('admin/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Get payment by ID (Admin only)',
+  })
+  adminFindOne(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.paymentsService.adminFindOne(id);
+  }
 }

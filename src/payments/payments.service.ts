@@ -186,4 +186,60 @@ async markAsPaid(id: number, userId: number) {
     notification: result.notification,
   };
 }
+
+async adminFindAll() {
+  return this.prisma.payment.findMany({
+    include: {
+      booking: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          event: true,
+          seats: true,
+          ticket: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
+async adminFindOne(id: number) {
+  const payment = await this.prisma.payment.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      booking: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          event: true,
+          seats: true,
+          ticket: true,
+        },
+      },
+    },
+  });
+
+  if (!payment) {
+    throw new NotFoundException('Payment not found');
+  }
+
+  return payment;
+}
 }
