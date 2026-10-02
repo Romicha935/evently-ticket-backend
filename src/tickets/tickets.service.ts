@@ -124,4 +124,57 @@ export class TicketsService {
 
     return ticket;
   }
+  async adminFindAll() {
+  return this.prisma.ticket.findMany({
+    include: {
+      booking: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          event: true,
+          seats: true,
+          payment: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
+async adminFindOne(id: number) {
+  const ticket = await this.prisma.ticket.findUnique({
+    where: { id },
+    include: {
+      booking: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          event: true,
+          seats: true,
+          payment: true,
+        },
+      },
+    },
+  });
+
+  if (!ticket) {
+    throw new NotFoundException('Ticket not found');
+  }
+
+  return ticket;
+}
 }

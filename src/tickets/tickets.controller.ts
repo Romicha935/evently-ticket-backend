@@ -18,6 +18,8 @@ import {
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt_auth.guards';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('Tickets')
 @ApiBearerAuth()
@@ -65,4 +67,25 @@ export class TicketsController {
       req.user.userId,
     );
   }
+  @Get('admin/all')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('ADMIN')
+@ApiOperation({
+  summary: 'Get all tickets (Admin only)',
+})
+adminFindAll() {
+  return this.ticketsService.adminFindAll();
+}
+
+@Get('admin/:id')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('ADMIN')
+@ApiOperation({
+  summary: 'Get ticket by ID (Admin only)',
+})
+adminFindOne(
+  @Param('id', ParseIntPipe) id: number,
+) {
+  return this.ticketsService.adminFindOne(id);
+}
 }
