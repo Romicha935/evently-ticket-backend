@@ -31,17 +31,19 @@ export class NotificationsController {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  @Post()
-  @ApiOperation({
-    summary: 'Create a notification',
-  })
-  create(
-    @Body() createNotificationDto: CreateNotificationDto,
-  ) {
-    return this.notificationsService.create(
-      createNotificationDto,
-    );
-  }
+ @Post()
+@ApiOperation({
+  summary: 'Create notification for current user',
+})
+create(
+  @Req() req: any,
+  @Body() createNotificationDto: CreateNotificationDto,
+) {
+  return this.notificationsService.create(
+    req.user.userId,
+    createNotificationDto,
+  );
+}
 
   @Get()
   @ApiOperation({

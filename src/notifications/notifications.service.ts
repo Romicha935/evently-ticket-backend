@@ -10,33 +10,25 @@ import { CreateNotificationDto } from './dto/create-notification.dto';
 export class NotificationsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createNotificationDto: CreateNotificationDto) {
-    const {
+ async create(
+  userId: number,
+  createNotificationDto: CreateNotificationDto,
+) {
+  const {
+    title,
+    message,
+    type,
+  } = createNotificationDto;
+
+  return this.prisma.notification.create({
+    data: {
       userId,
       title,
       message,
       type,
-    } = createNotificationDto;
-
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return this.prisma.notification.create({
-      data: {
-        userId,
-        title,
-        message,
-        type,
-      },
-    });
-  }
+    },
+  });
+}
 
   async findAll(userId: number) {
     return this.prisma.notification.findMany({
