@@ -15,6 +15,8 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt_auth.guards';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('Bookings')
 @ApiBearerAuth()
@@ -64,4 +66,26 @@ cancel(
     req.user.userId,
   );
 }
+
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Get all bookings (Admin only)',
+  })
+  adminFindAll() {
+    return this.bookingsService.adminFindAll();
+  }
+
+  @Get('admin/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Get booking by ID (Admin only)',
+  })
+  adminFindOne(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.bookingsService.adminFindOne(id);
+  }
 }
