@@ -19,6 +19,8 @@ import {
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt_auth.guards';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('Notifications')
 @ApiBearerAuth()
@@ -74,4 +76,25 @@ export class NotificationsController {
       req.user.userId,
     );
   }
+  @Get('admin/all')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('ADMIN')
+@ApiOperation({
+  summary: 'Get all notifications (Admin only)',
+})
+adminFindAll() {
+  return this.notificationsService.adminFindAll();
+}
+
+@Get('admin/:id')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('ADMIN')
+@ApiOperation({
+  summary: 'Get notification by ID (Admin only)',
+})
+adminFindOne(
+  @Param('id', ParseIntPipe) id: number,
+) {
+  return this.notificationsService.adminFindOne(id);
+}
 }

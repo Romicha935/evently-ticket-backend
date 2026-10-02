@@ -86,4 +86,49 @@ export class NotificationsService {
       message: 'All notifications marked as read',
     };
   }
+
+  async adminFindAll() {
+  return this.prisma.notification.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
+async adminFindOne(id: number) {
+  const notification =
+    await this.prisma.notification.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+  if (!notification) {
+    throw new NotFoundException(
+      'Notification not found',
+    );
+  }
+
+  return notification;
+}
 }
