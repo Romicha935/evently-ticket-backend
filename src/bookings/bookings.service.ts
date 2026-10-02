@@ -144,4 +144,53 @@ async cancel(id: number, userId: number) {
     },
   });
 }
+async adminFindAll() {
+  return this.prisma.booking.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+      event: true,
+      seats: true,
+      payment: true,
+      ticket: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
+async adminFindOne(id: number) {
+  const booking = await this.prisma.booking.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+      event: true,
+      seats: true,
+      payment: true,
+      ticket: true,
+    },
+  });
+
+  if (!booking) {
+    throw new NotFoundException('Booking not found');
+  }
+
+  return booking;
+}
 }
