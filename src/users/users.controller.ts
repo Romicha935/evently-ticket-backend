@@ -34,7 +34,13 @@ export class UsersController {
   findAll() {
     return this.usersService.findAll();
   }
-
+@Get('stats')
+@ApiOperation({
+  summary: 'Get user statistics (Admin only)',
+})
+getStats() {
+  return this.usersService.getStats();
+}
   @Get(':id')
   @ApiOperation({
     summary: 'Get user by ID (Admin only)',

@@ -48,4 +48,25 @@ export class UsersService {
 
     return user;
   }
+  async getStats() {
+  const totalUsers = await this.prisma.user.count();
+
+  const totalAdmins = await this.prisma.user.count({
+    where: {
+      role: 'ADMIN',
+    },
+  });
+
+  const totalCustomers = await this.prisma.user.count({
+    where: {
+      role: 'USER',
+    },
+  });
+
+  return {
+    totalUsers,
+    totalAdmins,
+    totalCustomers,
+  };
+}
 }
